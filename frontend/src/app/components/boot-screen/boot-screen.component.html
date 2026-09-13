@@ -1,0 +1,51 @@
+<div class="boot-container">
+  <!-- Glowing Cyber Grid Background -->
+  <div class="hud-circle-wrapper">
+    <div class="arc-reactor-outer">
+      <div class="arc-reactor-mid">
+        <div class="arc-reactor-core">
+          <i class="ri-cpu-line core-icon"></i>
+        </div>
+      </div>
+      <div class="rotating-ring ring-1"></div>
+      <div class="rotating-ring ring-2"></div>
+      <div class="rotating-ring ring-3"></div>
+    </div>
+  </div>
+
+  <div class="boot-header">
+    <h1 class="brand-title">ULTRON</h1>
+    <p class="brand-subtitle">AUTONOMOUS AI INTERFACE</p>
+  </div>
+
+  <!-- Terminal Diagnostics Log -->
+  <div class="terminal-box">
+    <div class="terminal-bar">
+      <span class="dot dot-red"></span>
+      <span class="dot dot-orange"></span>
+      <span class="dot dot-gray"></span>
+      <span class="terminal-title">SYS_DIAGNOSTICS // V1.0.0</span>
+    </div>
+    <div class="terminal-content">
+      <div *ngFor="let log of bootLogs()" class="log-entry">
+        <span class="prompt-arrow">&gt;&gt;</span>
+        <span class="log-text">{{ log }}</span>
+      </div>
+      <div *ngIf="!isReady()" class="cursor-blink">_</div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-container">
+    <div class="progress-bar-fill" [style.width.%]="bootProgress()"></div>
+  </div>
+  <div class="progress-text">{{ bootProgress() }}% INITIALIZED</div>
+
+  <!-- Engage Button -->
+  <div class="action-container" *ngIf="isReady()">
+    <button class="btn-engage" (click)="engageSystem()">
+      <i class="ri-shield-flash-line"></i>
+      <span>INITIALIZE INTERFACE</span>
+    </button>
+  </div>
+</div>

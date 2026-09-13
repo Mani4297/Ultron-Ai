@@ -1,0 +1,26 @@
+<div class="ultron-app-root">
+  <!-- Boot Screen Sequence -->
+  <app-boot-screen 
+    *ngIf="!isBooted()" 
+    (bootComplete)="onBootComplete()">
+  </app-boot-screen>
+
+  <!-- Main HUD Application Layout -->
+  <div class="main-interface" *ngIf="isBooted()">
+    <app-sidebar 
+      class="app-sidebar-col"
+      (triggerPrompt)="handleModulePrompt($event)"
+      (openSettings)="showSettings.set(true)">
+    </app-sidebar>
+
+    <main class="app-main-col">
+      <app-chat-window></app-chat-window>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <app-settings-panel 
+    *ngIf="showSettings()" 
+    (close)="showSettings.set(false)">
+  </app-settings-panel>
+</div>

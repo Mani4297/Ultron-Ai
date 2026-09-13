@@ -1,0 +1,87 @@
+<aside class="sidebar-wrapper">
+  <!-- Brand & System Telemetry -->
+  <div class="sidebar-header">
+    <div class="core-mini-indicator">
+      <span class="pulse-dot" [class.online]="chatService.isConnected()"></span>
+      <span class="core-label">{{ chatService.isConnected() ? 'CORE ONLINE' : 'STANDBY' }}</span>
+    </div>
+    <div class="model-tag">GEMINI 3.6 FLASH</div>
+  </div>
+
+  <!-- Tab Selector -->
+  <div class="tab-switcher">
+    <button class="tab-btn" [class.active]="activeTab === 'modules'" (click)="setTab('modules')">
+      <i class="ri-dashboard-3-line"></i>
+      <span>MODULES</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'history'" (click)="setTab('history')">
+      <i class="ri-history-line"></i>
+      <span>TASK LOG</span>
+      <span class="badge" *ngIf="chatService.messages().length > 0">{{ chatService.messages().length }}</span>
+    </button>
+  </div>
+
+  <!-- Modules List -->
+  <div class="sidebar-body" *ngIf="activeTab === 'modules'">
+    <div class="section-title">COMMAND DIRECTIVES</div>
+    <div class="module-cards">
+      <div 
+        *ngFor="let mod of modules" 
+        class="module-card" 
+        (click)="selectModule(mod)">
+        <div class="mod-icon-box">
+          <i [class]="mod.icon"></i>
+        </div>
+        <div class="mod-info">
+          <div class="mod-title">{{ mod.title }}</div>
+          <div class="mod-desc">{{ mod.description }}</div>
+        </div>
+        <i class="ri-arrow-right-s-line mod-arrow"></i>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-panel">
+      <div class="stat-row">
+        <span class="stat-key">LATENCY:</span>
+        <span class="stat-val">OPTIMAL</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">PROTOCOL:</span>
+        <span class="stat-val">WEBSOCKET WS/V1</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-key">SECURITY:</span>
+        <span class="stat-val">ENCRYPTED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task History Log -->
+  <div class="sidebar-body" *ngIf="activeTab === 'history'">
+    <div class="section-title">CHRONOLOGICAL TASK LOG</div>
+    <div class="history-list" *ngIf="chatService.messages().length > 0; else noHistory">
+      <div *ngFor="let msg of chatService.messages()" class="history-item" [class.user-item]="msg.role === 'user'">
+        <div class="hist-header">
+          <span class="hist-role">{{ msg.role === 'user' ? 'OPERATOR' : 'ULTRON' }}</span>
+          <span class="hist-time">{{ msg.timestamp | date:'HH:mm:ss' }}</span>
+        </div>
+        <div class="hist-preview">{{ msg.content || 'Processing stream...' }}</div>
+      </div>
+    </div>
+    <ng-template #noHistory>
+      <div class="empty-state">
+        <i class="ri-file-list-3-line"></i>
+        <p>No historical interactions recorded in this cycle.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <button class="footer-action-btn" (click)="openSettings.emit()">
+      <i class="ri-settings-4-line"></i>
+      <span>SYSTEM CONFIG</span>
+    </button>
+  </div>
+</aside>

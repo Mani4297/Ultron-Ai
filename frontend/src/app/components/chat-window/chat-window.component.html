@@ -1,0 +1,139 @@
+<div class="chat-container">
+  <!-- Top HUD Status Banner -->
+  <div class="chat-header">
+    <div class="hud-title-zone">
+      <div class="hud-glitch-title">ULTRON MATRIX</div>
+      <div class="hud-subtitle">TACTICAL INTELLIGENCE NODE</div>
+    </div>
+
+    <!-- Voice / Audio Activity Wave -->
+    <div class="audio-wave-container" *ngIf="speechService.isSpeaking()">
+      <span class="wave-bar bar-1"></span>
+      <span class="wave-bar bar-2"></span>
+      <span class="wave-bar bar-3"></span>
+      <span class="wave-bar bar-4"></span>
+      <span class="wave-bar bar-5"></span>
+      <span class="wave-label">SYNTHESIZING VOCAL STREAM...</span>
+    </div>
+
+    <div class="chat-actions">
+      <button
+        class="handsfree-btn"
+        [class.active]="speechService.isHandsFree()"
+        (click)="toggleHandsFree()"
+        [title]="speechService.isHandsFree() ? 'Stop hands-free Jarvis mode' : 'Enable hands-free Jarvis mode'">
+        <i [class]="speechService.isHandsFree() ? 'ri-voiceprint-line' : 'ri-mic-line'"></i>
+        <span>{{ speechService.isHandsFree() ? 'JARVIS ACTIVE' : 'HANDS-FREE' }}</span>
+      </button>
+      <select
+        class="language-select"
+        [value]="chatService.responseLanguage()"
+        (change)="onLanguageChange($event)"
+        title="Choose conversation language">
+        <option value="en-US">ENGLISH</option>
+        <option value="te-IN">తెలుగు</option>
+      </select>
+      <button class="clear-btn" (click)="chatService.clearHistory()" title="Purge Context History">
+        <i class="ri-delete-bin-line"></i>
+        <span>PURGE</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages Stream Area -->
+  <div class="messages-stream" #messagesContainer>
+    <!-- Welcome Greeting if empty -->
+    <div *ngIf="chatService.messages().length === 0" class="welcome-box">
+      <div class="welcome-core-circle">
+        <i class="ri-radar-line"></i>
+      </div>
+      <div class="welcome-kicker">NEURAL LINK ESTABLISHED</div>
+      <h2>NEURAL MATRIX READY</h2>
+      <p>Ask Ultron anything, choose a command module, or enable hands-free mode and say “Hello Jarvis”.</p>
+      <div class="starter-chips">
+        <button class="chip" (click)="chatService.sendMessage('Ultron, summarize your primary capabilities.')">
+          &gt; Summarize Capabilities
+        </button>
+        <button class="chip" (click)="chatService.sendMessage('Provide an overview of the current system architecture.')">
+          &gt; System Architecture
+        </button>
+        <button class="chip" (click)="chatService.sendMessage('What are our strategic directives today?')">
+          &gt; Strategic Directives
+        </button>
+      </div>
+    </div>
+
+    <!-- Message Bubbles -->
+    <div 
+      *ngFor="let msg of chatService.messages()" 
+      class="message-card" 
+      [class.user-card]="msg.role === 'user'"
+      [class.assistant-card]="msg.role === 'assistant'">
+      
+      <div class="avatar-col">
+        <div class="avatar-circle">
+          <i [class]="msg.role === 'user' ? 'ri-user-3-line' : 'ri-cpu-line'"></i>
+        </div>
+      </div>
+
+      <div class="content-col">
+        <div class="meta-row">
+          <span class="author-name">{{ msg.role === 'user' ? 'OPERATOR' : 'ULTRON' }}</span>
+          <span class="time-stamp">{{ msg.timestamp | date:'HH:mm:ss' }}</span>
+
+          <button 
+            *ngIf="msg.role === 'assistant' && msg.content" 
+            class="speak-btn" 
+            (click)="speakMessage(msg)"
+            [title]="speechService.isSpeaking() && activeVoiceMessageId() === msg.id ? 'Stop speech' : 'Read aloud'">
+            <i [class]="speechService.isSpeaking() && activeVoiceMessageId() === msg.id ? 'ri-volume-vibrate-line speaking' : 'ri-volume-up-line'"></i>
+          </button>
+        </div>
+
+        <div class="bubble-text">
+          <span class="raw-content">{{ msg.content }}</span>
+          <span *ngIf="msg.isStreaming" class="stream-cursor">▌</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Control Deck -->
+  <div class="input-deck">
+    <!-- Mic Listening Overlay Indicator -->
+    <div class="mic-listening-indicator" *ngIf="speechService.isListening()">
+      <i class="ri-mic-line pulse-mic"></i>
+      <span>{{ speechService.isHandsFree() ? 'HANDS-FREE MODE... SAY HELLO JARVIS' : 'LISTENING FOR AUDIO INPUT... SPEAK CLEARLY' }}</span>
+    </div>
+
+    <div class="input-row">
+      <button 
+        class="mic-btn" 
+        [class.active]="speechService.isListening()" 
+        (click)="toggleVoiceInput()"
+        title="Toggle Microphone Voice Input">
+        <i [class]="speechService.isListening() ? 'ri-mic-fill' : 'ri-mic-line'"></i>
+      </button>
+
+      <div class="text-input-wrap">
+        <textarea 
+          class="cyber-textarea" 
+          placeholder="Transmit directive to Ultron (Press Enter to send)..." 
+          [(ngModel)]="userInput" 
+          (keydown)="onKeyDown($event)"
+          rows="1"
+          [disabled]="chatService.isStreaming()">
+        </textarea>
+      </div>
+
+      <button 
+        class="send-btn" 
+        [disabled]="!userInput.trim() || chatService.isStreaming()" 
+        (click)="onSend()"
+        title="Transmit Directive">
+        <i *ngIf="!chatService.isStreaming()" class="ri-send-plane-2-fill"></i>
+        <i *ngIf="chatService.isStreaming()" class="ri-loader-4-line spin"></i>
+      </button>
+    </div>
+  </div>
+</div>

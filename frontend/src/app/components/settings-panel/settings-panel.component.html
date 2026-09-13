@@ -1,0 +1,83 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <div class="settings-modal" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="title-wrap">
+        <i class="ri-settings-3-line modal-icon"></i>
+        <h3>SYSTEM CONFIGURATION</h3>
+      </div>
+      <button class="close-btn" (click)="close.emit()">
+        <i class="ri-close-line"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <!-- Voice Mode Option -->
+      <div class="setting-item">
+        <div class="setting-info">
+          <label class="setting-label">VOICE SYNTHESIS MODE</label>
+          <span class="setting-hint">Enables browser SpeechSynthesis audio engine for vocal responses</span>
+        </div>
+        <label class="switch">
+          <input 
+            type="checkbox" 
+            [checked]="chatService.settings().voiceEnabled" 
+            (change)="toggleVoice($event)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Auto Speak -->
+      <div class="setting-item" *ngIf="chatService.settings().voiceEnabled">
+        <div class="setting-info">
+          <label class="setting-label">AUTO-SPEAK STREAM</label>
+          <span class="setting-hint">Automatically vocalize assistant answers as they finalize</span>
+        </div>
+        <label class="switch">
+          <input 
+            type="checkbox" 
+            [checked]="chatService.settings().autoSpeak" 
+            (change)="toggleAutoSpeak($event)">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <!-- Typing Delay -->
+      <div class="setting-item column-layout">
+        <div class="setting-info flex-between">
+          <label class="setting-label">STREAM PACING DELAY</label>
+          <span class="range-val">{{ chatService.settings().typingDelay }} ms</span>
+        </div>
+        <input 
+          type="range" 
+          min="0" 
+          max="50" 
+          step="5" 
+          [value]="chatService.settings().typingDelay" 
+          (input)="updateDelay($event)"
+          class="cyber-range">
+        <span class="setting-hint">Adjust latency pacing of AI token stream rendering</span>
+      </div>
+
+      <!-- Purge History -->
+      <div class="setting-item danger-item">
+        <div class="setting-info">
+          <label class="setting-label danger-label">PURGE LOCAL CONVERSATION LOGS</label>
+          <span class="setting-hint">Erase all cached messages and reset local state</span>
+        </div>
+        <button class="btn-danger" (click)="purgeHistory()">
+          <i class="ri-delete-bin-7-line"></i>
+          <span>PURGE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn-confirm" (click)="close.emit()">
+        <span>SAVE & APPLY</span>
+      </button>
+    </div>
+  </div>
+</div>

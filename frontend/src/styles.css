@@ -1,0 +1,97 @@
+/* ULTRON Sci-Fi Theme CSS */
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121c;
+  --bg-panel: rgba(18, 18, 28, 0.85);
+  --bg-surface: #181826;
+  --border-glow: #ff3b1f;
+  --border-glow-dim: rgba(255, 59, 31, 0.25);
+  --border-glow-subtle: rgba(255, 59, 31, 0.12);
+  --accent-orange: #ff5c00;
+  --accent-red: #ff3b1f;
+  --accent-red-bright: #ff2200;
+  --text-primary: #f0f0f5;
+  --text-secondary: #9a9ab0;
+  --text-muted: #5e5e78;
+  --text-accent: #ff6b4a;
+  --font-hud: 'Orbitron', -apple-system, sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --box-glow: 0 0 15px rgba(255, 59, 31, 0.35);
+  --box-glow-strong: 0 0 25px rgba(255, 59, 31, 0.65), inset 0 0 15px rgba(255, 92, 0, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Background HUD Grid & Scanlines Effect */
+body::before {
+  content: " ";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: 
+    linear-gradient(rgba(10, 10, 15, 0.88), rgba(10, 10, 15, 0.88)),
+    linear-gradient(to right, rgba(255, 59, 31, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 59, 31, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Subtle CRT Scanline overlay */
+body::after {
+  content: " ";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.6;
+}
+
+/* Custom Futuristic Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 10, 15, 0.8);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-glow-dim);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 59, 31, 0.4);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+/* Button & interactive sound/feedback styles */
+button {
+  font-family: var(--font-hud);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+button:focus {
+  outline: none;
+}
