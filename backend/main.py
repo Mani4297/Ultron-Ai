@@ -90,6 +90,16 @@ def apply_language_instruction(message: str, language: str) -> str:
         return message + "\n\nRespond in Telugu (తెలుగు), using clear and natural Telugu."
     return message + "\n\nRespond in English."
 
+def friendly_ai_error(error: Exception) -> str:
+    error_text = str(error).lower()
+    if "429" in error_text or "quota" in error_text or "rate limit" in error_text:
+        return (
+            "Gemini usage limit reached. Ultron is online, but the AI provider has "
+            "temporarily paused new requests. Please wait and try again, or check "
+            "your Google AI Studio billing and quota settings."
+        )
+    return f"Neural generation failed: {str(error)}"
+
 @app.get("/")
 def root():
     return {
@@ -132,7 +142,7 @@ async def chat_endpoint(request: ChatRequest):
         return ChatResponse(response=response.text)
     except Exception as e:
         logger.error(f"Error during Gemini generation: {e}")
-        raise HTTPException(status_code=500, detail=f"AI generation failed: {str(e)}")
+        raise HTTPException(status_code=503, detail=friendly_ai_error(e))
 
 @app.websocket("/ws/chat")
 async def websocket_chat_endpoint(websocket: WebSocket):
@@ -212,7 +222,7 @@ async def websocket_chat_endpoint(websocket: WebSocket):
                 logger.error(f"WebSocket generation error: {e}")
                 await websocket.send_json({
                     "type": "error",
-                    "message": f"Neural generation interrupted: {str(e)}"
+                    "message": friendly_ai_error(e)
                 })
 
     except WebSocketDisconnect:
