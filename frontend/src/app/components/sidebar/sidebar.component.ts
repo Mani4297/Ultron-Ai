@@ -19,24 +19,24 @@ export class SidebarComponent {
   public modules: SidebarModule[] = [
     {
       id: 'status',
-      title: 'SYSTEM STATUS',
-      description: 'Request core diagnostics & operational capacity overview',
+      title: 'DAILY BRIEF',
+      description: 'Get a clear overview of your assistant and today\'s focus',
       icon: 'ri-pulse-line',
-      prompt: 'Ultron, report complete system status, neural bandwidth, and available autonomous capabilities.'
+      prompt: 'Ultron, give me a clear daily brief with my current focus, available capabilities, and useful next steps.'
     },
     {
       id: 'threat',
-      title: 'THREAT ASSESSMENT',
-      description: 'Tactical risk analysis with witty strategic forecasting',
+      title: 'RISK & PRIORITIES',
+      description: 'Spot risks and decide what deserves attention first',
       icon: 'ri-shield-cross-line',
-      prompt: 'Ultron, run a tactical threat assessment and strategic risk evaluation of my current workflow.'
+      prompt: 'Ultron, help me identify risks, decisions, and the most important priorities in my current workflow.'
     },
     {
       id: 'optimize',
-      title: 'CODE OPTIMIZATION',
-      description: 'Autonomous architectural audit and refactoring directives',
+      title: 'IDEAS & IMPROVEMENTS',
+      description: 'Find practical ways to improve a project or plan',
       icon: 'ri-terminal-box-line',
-      prompt: 'Ultron, review my operational architecture and suggest three high-efficiency optimizations.'
+      prompt: 'Ultron, review my project or plan and suggest three practical improvements with clear reasoning.'
     }
   ];
 
